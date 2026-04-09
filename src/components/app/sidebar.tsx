@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getUser, toDisplayUser } from "@/lib/supabase/get-user";
 import SidebarNav from "./sidebar-nav";
 
@@ -9,9 +10,12 @@ export default async function Sidebar() {
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-sidebar p-5 md:flex">
       <div className="mb-8 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-lg font-medium text-primary-foreground">
-          C
-        </div>
+        <Image
+          src="/favicon-32x32.png"
+          alt="Colchoncito"
+          width={32}
+          height={32}
+        />
         <span className="text-base font-medium">Colchoncito</span>
       </div>
 

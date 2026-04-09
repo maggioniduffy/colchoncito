@@ -8,7 +8,7 @@ const ITEMS = [
   { key: "crypto", label: "CRYPTO" },
 ] as const;
 
-export function BarraCotizaciones() {
+export default function BarraCotizaciones() {
   const { cotizaciones, cotizacionActiva } = mockData;
 
   return (

@@ -80,11 +80,11 @@ const items: NavItem[] = [
   { href: "/mas", label: "Más", icon: MoreIcon },
 ];
 
-export function BottomNav() {
+export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center justify-around border-t border-gray-200 bg-white px-5 py-3">
+    <nav className="flex items-center justify-around border-t border-gray-200 bg-white px-5 py-3 md:hidden">
       {items.slice(0, 2).map((item) => (
         <NavLink
           key={item.href}

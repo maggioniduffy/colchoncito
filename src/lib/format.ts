@@ -36,3 +36,26 @@ export function formatRelativeTime(date: Date): string {
   if (hours < 24) return `hace ${hours}h`;
   return date.toLocaleDateString("es-AR");
 }
+
+/**
+ * Convierte una fecha (o ahora) a YYYY-MM-01, que es el formato
+ * que usamos para representar "el mes" en la DB.
+ */
+export function toMesDB(fecha: Date = new Date()): string {
+  const año = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+  return `${año}-${mes}-01`;
+}
+
+/**
+ * Devuelve un label legible tipo "Abril 2026" desde YYYY-MM-01.
+ */
+export function mesDBaLabel(mesDB: string): string {
+  const [año, mes] = mesDB.split("-");
+  const fecha = new Date(parseInt(año), parseInt(mes) - 1, 1);
+  const nombre = fecha.toLocaleDateString("es-AR", {
+    month: "long",
+    year: "numeric",
+  });
+  return nombre.charAt(0).toUpperCase() + nombre.slice(1);
+}

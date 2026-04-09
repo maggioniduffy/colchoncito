@@ -41,7 +41,7 @@ const BudgetIcon = (
   </svg>
 );
 
-const AccountsIcon = (
+const MonthIcon = (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -52,7 +52,7 @@ const AccountsIcon = (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
+      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
     />
   </svg>
 );
@@ -76,7 +76,7 @@ const MoreIcon = (
 const items: NavItem[] = [
   { href: "/", label: "Inicio", icon: HomeIcon },
   { href: "/presupuesto", label: "Presup.", icon: BudgetIcon },
-  { href: "/cuentas", label: "Cuentas", icon: AccountsIcon },
+  { href: "/mes/202604", label: "Mes", icon: MonthIcon },
   { href: "/mas", label: "Más", icon: MoreIcon },
 ];
 

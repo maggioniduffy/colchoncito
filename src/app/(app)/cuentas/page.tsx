@@ -5,10 +5,18 @@ const GRUPOS: { tipo: TipoCuenta; titulo: string; colorTotal: string }[] = [
   {
     tipo: "liquido",
     titulo: "LÍQUIDO · disponible ya",
-    colorTotal: "text-green-700",
+    colorTotal: "text-emerald-600 dark:text-emerald-400",
   },
-  { tipo: "por_cobrar", titulo: "POR COBRAR", colorTotal: "text-green-700" },
-  { tipo: "comprometido", titulo: "COMPROMETIDO", colorTotal: "text-red-700" },
+  {
+    tipo: "por_cobrar",
+    titulo: "POR COBRAR",
+    colorTotal: "text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    tipo: "comprometido",
+    titulo: "COMPROMETIDO",
+    colorTotal: "text-destructive",
+  },
 ];
 
 export default function CuentasPage() {
@@ -17,7 +25,7 @@ export default function CuentasPage() {
   return (
     <>
       <header className="mb-4 px-5 md:mb-6 md:px-0">
-        <p className="text-lg font-medium text-gray-900 md:text-2xl">Cuentas</p>
+        <p className="text-lg font-medium md:text-2xl">Cuentas</p>
       </header>
 
       {GRUPOS.map((grupo) => {
@@ -27,7 +35,7 @@ export default function CuentasPage() {
         return (
           <section key={grupo.tipo} className="mx-5 mb-4 md:mx-0 md:mb-6">
             <div className="mb-1.5 flex justify-between text-[11px] md:mb-2 md:text-xs">
-              <span className="text-gray-500">{grupo.titulo}</span>
+              <span className="text-muted-foreground">{grupo.titulo}</span>
               <span className={`font-medium ${grupo.colorTotal}`}>
                 {formatARS(totalArs, { showSign: grupo.tipo !== "liquido" })}
               </span>
@@ -37,29 +45,27 @@ export default function CuentasPage() {
               {items.map((cuenta) => (
                 <div
                   key={cuenta.id}
-                  className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2.5 md:px-4 md:py-3.5"
+                  className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5 md:px-4 md:py-3.5"
                 >
                   <div>
-                    <div className="text-sm font-medium text-gray-900 md:text-base">
+                    <div className="text-sm font-medium md:text-base">
                       {cuenta.nombre}
                     </div>
-                    <div className="text-[11px] text-gray-500 md:text-xs">
+                    <div className="text-[11px] text-muted-foreground md:text-xs">
                       {cuenta.subtitulo}
                     </div>
                   </div>
                   <div className="text-right">
                     <div
                       className={`text-sm font-medium md:text-base ${
-                        cuenta.tipo === "comprometido"
-                          ? "text-red-700"
-                          : "text-gray-900"
+                        cuenta.tipo === "comprometido" ? "text-destructive" : ""
                       }`}
                     >
                       {cuenta.moneda === "USD"
                         ? formatUSD(cuenta.saldoUsd)
                         : formatARS(cuenta.saldoArs)}
                     </div>
-                    <div className="text-[10px] text-gray-500 md:text-xs">
+                    <div className="text-[10px] text-muted-foreground md:text-xs">
                       {cuenta.moneda === "USD"
                         ? formatARS(cuenta.saldoArs)
                         : formatUSD(cuenta.saldoUsd)}

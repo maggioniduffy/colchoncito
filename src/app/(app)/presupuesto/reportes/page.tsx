@@ -1,7 +1,5 @@
 "use client";
 
-import { formatARS } from "@/lib/format";
-import { mockData } from "@/lib/mock-data";
 import Link from "next/link";
 import {
   LineChart,
@@ -12,6 +10,8 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { mockData } from "@/lib/mock-data";
+import { formatARS } from "@/lib/format";
 
 export default function ReportesPage() {
   const { evolucionMensual, presupuestoAnual } = mockData;
@@ -20,19 +20,21 @@ export default function ReportesPage() {
     <>
       <header className="mb-4 flex items-center justify-between px-5">
         <div className="flex items-center gap-2">
-          <Link href="/presupuesto" className="text-blue-600">
+          <Link href="/presupuesto" className="text-primary">
             ←
           </Link>
-          <p className="text-lg font-medium text-gray-900">Reportes</p>
+          <p className="text-lg font-medium">Reportes</p>
         </div>
-        <span className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] text-gray-500">
+        <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">
           Anual {presupuestoAnual.año}
         </span>
       </header>
 
       <section className="mx-5 mb-5">
-        <p className="mb-2 text-[11px] text-gray-500">EVOLUCIÓN MENSUAL</p>
-        <div className="rounded-lg border border-gray-200 p-3">
+        <p className="mb-2 text-[11px] text-muted-foreground">
+          EVOLUCIÓN MENSUAL
+        </p>
+        <div className="rounded-lg border border-border p-3">
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -41,26 +43,34 @@ export default function ReportesPage() {
               >
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="#f3f4f6"
+                  stroke="var(--border)"
                   vertical={false}
                 />
                 <XAxis
                   dataKey="mes"
-                  tick={{ fontSize: 11, fill: "#6b7280" }}
+                  tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "#6b7280" }}
+                  tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
                   width={36}
                 />
-                {/* <Tooltip
-                  formatter={(value: number) => formatARS(value)}
-                  contentStyle={{ fontSize: 12, borderRadius: 8 }}
-                /> */}
+                <Tooltip
+                  formatter={(value) =>
+                    typeof value === "number" ? formatARS(value) : String(value)
+                  }
+                  contentStyle={{
+                    fontSize: 12,
+                    borderRadius: 8,
+                    backgroundColor: "var(--popover)",
+                    border: "1px solid var(--border)",
+                    color: "var(--popover-foreground)",
+                  }}
+                />
                 <Line
                   type="monotone"
                   dataKey="ingresos"
@@ -81,30 +91,30 @@ export default function ReportesPage() {
           <div className="mt-2 flex justify-center gap-4 text-[11px]">
             <div className="flex items-center gap-1.5">
               <div className="h-0.5 w-3 bg-green-600" />
-              <span className="text-gray-500">Ingresos</span>
+              <span className="text-muted-foreground">Ingresos</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="h-0.5 w-3 bg-red-600" />
-              <span className="text-gray-500">Egresos</span>
+              <span className="text-muted-foreground">Egresos</span>
             </div>
           </div>
         </div>
       </section>
 
       <section className="mx-5 mb-5">
-        <p className="mb-2 text-[11px] text-gray-500">
+        <p className="mb-2 text-[11px] text-muted-foreground">
           COMPOSICIÓN POR CATEGORÍA
         </p>
-        <div className="rounded-lg border border-gray-200 p-3">
+        <div className="rounded-lg border border-border p-3">
           {presupuestoAnual.categorias.map((cat) => (
             <div key={cat.nombre} className="py-1.5">
               <div className="mb-1 flex justify-between text-xs">
-                <span className="text-gray-900">{cat.nombre}</span>
-                <span className="text-gray-500">
+                <span>{cat.nombre}</span>
+                <span className="text-muted-foreground">
                   {cat.porcentaje.toFixed(1)}%
                 </span>
               </div>
-              <div className="h-1 overflow-hidden rounded-full bg-gray-100">
+              <div className="h-1 overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full"
                   style={{
@@ -119,10 +129,10 @@ export default function ReportesPage() {
       </section>
 
       <section className="mx-5 mb-5">
-        <p className="mb-2 text-[11px] text-gray-500">
+        <p className="mb-2 text-[11px] text-muted-foreground">
           AHORRO ACUMULADO EN USD
         </p>
-        <div className="rounded-lg border border-gray-200 p-3 text-center text-xs text-gray-400">
+        <div className="rounded-lg border border-border p-3 text-center text-xs text-muted-foreground">
           (gráfico pendiente — mostrará stock de USD mes a mes)
         </div>
       </section>

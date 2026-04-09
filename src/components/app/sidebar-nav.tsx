@@ -119,8 +119,8 @@ export default function SidebarNav() {
             href={item.href}
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
               active
-                ? "bg-blue-50 text-blue-700"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             }`}
           >
             {item.icon}

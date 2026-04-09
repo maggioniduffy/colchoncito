@@ -23,3 +23,16 @@ export function formatUSD(n: number, options?: { showSign?: boolean }): string {
   if (options?.showSign && n > 0) return `+${formatted}`;
   return formatted;
 }
+
+export function formatRelativeTime(date: Date): string {
+  const now = Date.now();
+  const diff = now - date.getTime();
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  if (seconds < 60) return `hace ${seconds} seg`;
+  if (minutes < 60) return `hace ${minutes} min`;
+  if (hours < 24) return `hace ${hours}h`;
+  return date.toLocaleDateString("es-AR");
+}

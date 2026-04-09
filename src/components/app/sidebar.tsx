@@ -7,26 +7,26 @@ export default async function Sidebar() {
   const display = user ? toDisplayUser(user) : null;
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-r border-gray-200 bg-white p-5 md:flex">
+    <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-sidebar p-5 md:flex">
       <div className="mb-8 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-lg font-medium text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-lg font-medium text-primary-foreground">
           C
         </div>
-        <span className="text-base font-medium text-gray-900">Colchoncito</span>
+        <span className="text-base font-medium">Colchoncito</span>
       </div>
 
       <SidebarNav />
 
       <Link
         href="/nuevo"
-        className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+        className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
       >
         <span className="text-lg leading-none">+</span>
         <span>Nuevo movimiento</span>
       </Link>
 
       {display && (
-        <div className="mt-auto border-t border-gray-200 pt-4">
+        <div className="mt-auto border-t border-border pt-4">
           <div className="flex items-center gap-2.5">
             {display.avatarUrl ? (
               <img
@@ -35,15 +35,15 @@ export default async function Sidebar() {
                 className="h-9 w-9 rounded-full"
               />
             ) : (
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-sm font-medium text-primary">
                 {display.iniciales}
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium text-gray-900">
+              <div className="truncate text-sm font-medium">
                 {display.nombre}
               </div>
-              <div className="truncate text-[11px] text-gray-500">
+              <div className="truncate text-[11px] text-muted-foreground">
                 {display.email}
               </div>
             </div>
@@ -52,7 +52,7 @@ export default async function Sidebar() {
           <form action="/logout" method="POST" className="mt-3">
             <button
               type="submit"
-              className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50"
+              className="w-full rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
             >
               Cerrar sesión
             </button>

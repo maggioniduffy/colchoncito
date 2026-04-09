@@ -14,19 +14,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-2xl font-medium text-white">
+    <div className="flex min-h-screen items-center justify-center bg-background p-6">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-2xl font-medium text-primary-foreground">
           C
         </div>
-        <h1 className="text-2xl font-medium text-gray-900">Colchoncito</h1>
-        <p className="mt-2 text-sm text-gray-500">
+        <h1 className="text-2xl font-medium">Colchoncito</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           Tus finanzas en pesos y dólares, sin planillas.
         </p>
 
         <button
           onClick={handleGoogleLogin}
-          className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path

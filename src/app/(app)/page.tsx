@@ -1,7 +1,8 @@
-import BarraCotizaciones from "@/components/app/barra-cotizaciones";
 import { mockData } from "@/lib/mock-data";
 import { formatARS, formatUSD } from "@/lib/format";
 import { getUser, toDisplayUser } from "@/lib/supabase/get-user";
+import { BarraCotizaciones } from "@/components/app/barra-cotizaciones";
+import DesktopCotizaciones from "@/components/app/desktop-cotizaciones";
 
 export default async function Dashboard() {
   const authUser = await getUser();
@@ -25,11 +26,9 @@ export default async function Dashboard() {
           {user.iniciales}
         </div>
       </header>
-
       <div className="md:hidden">
         <BarraCotizaciones />
       </div>
-
       <div className="md:grid md:grid-cols-3 md:gap-6">
         <section className="mx-5 mb-5 rounded-xl bg-primary/10 p-4 md:col-span-2 md:mx-0 md:p-6">
           <p className="mb-1 text-[11px] font-medium text-primary">
@@ -48,7 +47,6 @@ export default async function Dashboard() {
           <DesktopCotizaciones />
         </div>
       </div>
-
       <div className="mx-5 mb-4 grid grid-cols-2 gap-2.5 md:mx-0 md:mt-6 md:grid-cols-3 md:gap-4">
         <div className="rounded-lg bg-muted p-3 md:p-4">
           <div className="text-[10px] text-muted-foreground md:text-xs">
@@ -84,7 +82,6 @@ export default async function Dashboard() {
           </div>
         </div>
       </div>
-
       <section className="mx-5 mb-4 md:mx-0 md:mt-6 md:rounded-xl md:border md:border-border md:p-6">
         <div className="mb-2 flex items-baseline justify-between">
           <span className="text-sm font-medium md:text-base">
@@ -114,53 +111,5 @@ export default async function Dashboard() {
         </div>
       </section>
     </>
-  );
-}
-
-function DesktopCotizaciones() {
-  const { cotizaciones, cotizacionActiva } = mockData;
-  const items: { key: keyof typeof cotizaciones; label: string }[] = [
-    { key: "oficial", label: "Oficial" },
-    { key: "mep", label: "MEP" },
-    { key: "blue", label: "Blue" },
-    { key: "crypto", label: "Crypto" },
-  ];
-
-  return (
-    <div className="rounded-xl border border-border p-4">
-      <div className="mb-3 flex items-baseline justify-between">
-        <p className="text-xs font-medium text-muted-foreground">
-          COTIZACIONES
-        </p>
-        <a href="/cotizacion" className="text-xs text-primary">
-          Cambiar →
-        </a>
-      </div>
-      <div className="flex flex-col gap-2">
-        {items.map((item) => {
-          const activa = item.key === cotizacionActiva;
-          const cot = cotizaciones[item.key];
-          return (
-            <div
-              key={item.key}
-              className={`flex items-center justify-between rounded-md px-2.5 py-1.5 ${
-                activa ? "bg-primary/10" : ""
-              }`}
-            >
-              <span
-                className={`text-sm ${activa ? "font-medium text-primary" : "text-foreground"}`}
-              >
-                {item.label}
-              </span>
-              <span
-                className={`text-sm ${activa ? "font-medium text-primary" : ""}`}
-              >
-                ${cot.valor.toLocaleString("es-AR")}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
   );
 }

@@ -84,7 +84,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center justify-around border-t border-gray-200 bg-white px-5 py-3 md:hidden">
+    <nav className="flex items-center justify-around border-t border-border bg-background px-5 py-3 md:hidden">
       {items.slice(0, 2).map((item) => (
         <NavLink
           key={item.href}
@@ -95,7 +95,7 @@ export default function BottomNav() {
 
       <Link
         href="/nuevo"
-        className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-2xl font-light text-white shadow-md active:bg-blue-700"
+        className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-2xl font-light text-primary-foreground shadow-md active:opacity-90"
       >
         +
       </Link>
@@ -116,7 +116,7 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
     <Link
       href={item.href}
       className={`flex flex-col items-center gap-0.5 text-[10px] ${
-        active ? "text-blue-600" : "text-gray-500"
+        active ? "text-primary" : "text-muted-foreground"
       }`}
     >
       {item.icon}

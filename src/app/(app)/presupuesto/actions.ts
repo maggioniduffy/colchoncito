@@ -250,3 +250,47 @@ export async function borrarAporte(id: number) {
   revalidatePath("/", "layout");
   return { success: true };
 }
+
+export async function obtenerConfigAnual(año: number) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "No autenticado", data: null };
+
+  const { data, error } = await supabase
+    .from("presupuesto_config_anual")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("año", año)
+    .maybeSingle();
+
+  if (error) return { error: error.message, data: null };
+  return {
+    error: null,
+    data: data ?? { user_id: user.id, año, meses_division: 12, desde_mes: 1 },
+  };
+}
+
+export async function guardarConfigAnual(
+  año: number,
+  meses_division: number,
+  desde_mes: number,
+) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "No autenticado" };
+
+  const { error } = await supabase
+    .from("presupuesto_config_anual")
+    .upsert(
+      { user_id: user.id, año, meses_division, desde_mes },
+      { onConflict: "user_id,año" },
+    );
+
+  if (error) return { error: error.message };
+  revalidatePath("/", "layout");
+  return { success: true };
+}

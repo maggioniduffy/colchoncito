@@ -9,6 +9,11 @@ import {
 } from "@/app/(app)/fijos/actions";
 import { mesDBaLabel } from "@/lib/format";
 import MesDetalle from "@/components/app/mes-detalle";
+import {
+  listarAportes,
+  obtenerConfigAnual,
+} from "@/app/(app)/presupuesto/actions";
+import PresupuestoDelMes from "@/components/app/presupuest-del-mes";
 
 export default async function MesPage({
   params,
@@ -16,21 +21,29 @@ export default async function MesPage({
   params: Promise<{ yyyymm: string }>;
 }) {
   const { yyyymm } = await params;
-  const año = yyyymm.slice(0, 4);
+  const year = yyyymm.slice(0, 4);
+  const yearInt = parseInt(year);
   const mes = yyyymm.slice(4, 6);
-  const mesDB = `${año}-${mes}-01`;
+  const mesDB = `${year}-${mes}-01`;
 
-  const [{ data: movimientos }, { data: categorias }, { data: fijos }] =
-    await Promise.all([
-      listarMovimientosDelMes(mesDB),
-      listarCategorias(),
-      listarFijos(),
-    ]);
+  const [
+    { data: movimientos },
+    { data: categorias },
+    { data: fijos },
+    { data: aportes },
+    { data: config },
+  ] = await Promise.all([
+    listarMovimientosDelMes(mesDB),
+    listarCategorias(),
+    listarFijos(),
+    listarAportes(yearInt),
+    obtenerConfigAnual(yearInt),
+  ]);
 
   const fijosIds = (fijos ?? []).map((f) => f.id);
   const { data: historicos } = await listarHistoricosDeTodos(fijosIds);
 
-  const fechaMes = new Date(parseInt(año), parseInt(mes) - 1, 1);
+  const fechaMes = new Date(yearInt, parseInt(mes) - 1, 1);
   const anterior = new Date(fechaMes);
   anterior.setMonth(anterior.getMonth() - 1);
   const siguiente = new Date(fechaMes);
@@ -41,7 +54,7 @@ export default async function MesPage({
 
   return (
     <>
-      <header className="mb-4 flex items-center justify-between px-5 md:mb-6 md:px-0">
+      <header className="mb-4 flex items-center justify-between px-5 md:mb-6 md:px-0 ">
         <div className="flex items-center gap-3">
           <Link
             href={`/mes/${toYyyymm(anterior)}`}
@@ -63,6 +76,13 @@ export default async function MesPage({
           </Link>
         </div>
       </header>
+
+      <PresupuestoDelMes
+        mesDB={mesDB}
+        aportes={aportes ?? []}
+        config={config!}
+        movimientos={movimientos ?? []}
+      />
 
       <MesDetalle
         mesDB={mesDB}

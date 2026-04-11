@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { useCotizacionStore } from "@/stores/cotizacion-store";
 import { guardarCotizacionActiva } from "./actions";
 import { formatRelativeTime } from "@/lib/format";
-import type { TipoCotizacion } from "@/lib/mock-data";
+import type { TipoCotizacion } from "@/lib/types";
 
 const OPCIONES: {
   key: Exclude<TipoCotizacion, "custom">;

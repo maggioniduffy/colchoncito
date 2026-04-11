@@ -3,7 +3,7 @@ import Sidebar from "@/components/app/sidebar";
 import { fetchAllCotizaciones } from "@/lib/cotizaciones/fetch";
 import { createClient } from "@/lib/supabase/server";
 import CotizacionLoader from "./cotizacion/loader";
-import { TipoCotizacion } from "@/lib/mock-data";
+import type { TipoCotizacion } from "@/lib/types";
 
 export default async function AppLayout({
   children,

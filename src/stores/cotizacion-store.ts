@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { TipoCotizacion } from "@/lib/mock-data";
+import type { TipoCotizacion } from "@/lib/types";
 import type { CotizacionData } from "@/lib/cotizaciones/fetch";
 
 type CotizacionStore = {

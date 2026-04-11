@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import type { TipoCotizacion } from "@/lib/mock-data";
+import type { TipoCotizacion } from "@/lib/types";
 
 export async function guardarCotizacionActiva(tipo: TipoCotizacion) {
   console.log("[action] guardando:", tipo);

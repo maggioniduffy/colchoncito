@@ -1,4 +1,4 @@
-import type { TipoCotizacion } from "@/lib/mock-data";
+import type { TipoCotizacion } from "@/lib/types";
 
 export type CotizacionData = {
   tipo: TipoCotizacion;

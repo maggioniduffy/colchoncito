@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useCotizacionStore } from "@/stores/cotizacion-store";
 import type { CotizacionData } from "@/lib/cotizaciones/fetch";
-import type { TipoCotizacion } from "@/lib/mock-data";
+import type { TipoCotizacion } from "@/lib/types";
 
 export default function CotizacionLoader({
   cotizaciones,

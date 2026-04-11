@@ -154,3 +154,12 @@ export type PresupuestoAporteInput = {
   fecha_aporte?: string;
   notas?: string | null;
 };
+
+export type PresupuestoConfigAnual = {
+  user_id: string;
+  año: number;
+  meses_division: number;
+  desde_mes: number;
+};
+
+export type TipoCotizacion = "oficial" | "mep" | "blue" | "crypto" | "custom";

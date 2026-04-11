@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { useCotizacionStore } from "@/stores/cotizacion-store";
 import { convertirMonto } from "@/lib/calculos/conversion";
 import { formatARS, formatUSD } from "@/lib/format";
@@ -8,21 +8,35 @@ import { borrarAporte } from "@/app/(app)/presupuesto/actions";
 import AporteModal from "./aporte-modal";
 import ConfirmModal from "./confirm-modal";
 import type { PresupuestoAporte, Categoria } from "@/lib/types";
+import { guardarConfigAnual } from "@/app/(app)/presupuesto/actions";
+import type { PresupuestoConfigAnual } from "@/lib/types";
 
 export default function PresupuestoView({
   año,
   aportes,
   categorias,
+  config,
 }: {
   año: number;
   aportes: PresupuestoAporte[];
   categorias: Categoria[];
+  config: PresupuestoConfigAnual;
 }) {
   const cotizacion = useCotizacionStore((s) => s.getValorActivo());
   const [creando, setCreando] = useState(false);
   const [editando, setEditando] = useState<PresupuestoAporte | null>(null);
   const [borrando, setBorrando] = useState<PresupuestoAporte | null>(null);
+  const [mesesDiv, setMesesDiv] = useState(config.meses_division);
+  const [desdeMes, setDesdeMes] = useState(config.desde_mes);
+  const [, startTransition] = useTransition();
 
+  const handleConfigChange = (meses: number, desde: number) => {
+    setMesesDiv(meses);
+    setDesdeMes(desde);
+    startTransition(async () => {
+      await guardarConfigAnual(año, meses, desde);
+    });
+  };
   const totales = useMemo(() => {
     let totalArs = 0;
     let totalUsd = 0;
@@ -44,6 +58,8 @@ export default function PresupuestoView({
       porMesUsd: totalUsd / 12,
     };
   }, [aportes, cotizacion]);
+  const baseMensualArs = mesesDiv > 0 ? totales.totalArs / mesesDiv : 0;
+  const baseMensualUsd = baseMensualArs / cotizacion;
 
   const categoriaPorId = useMemo(() => {
     const map = new Map<number, Categoria>();
@@ -119,14 +135,59 @@ export default function PresupuestoView({
         </section>
 
         <section className="mx-5 mb-4 rounded-xl bg-muted p-4 md:mx-0 md:p-6">
-          <p className="text-[11px] font-medium text-muted-foreground md:text-xs">
-            BASE MENSUAL · ÷12
-          </p>
-          <p className="mt-1 text-2xl font-medium md:text-4xl">
-            {formatARS(totales.porMesArs)}
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-[11px] font-medium text-muted-foreground md:text-xs">
+              BASE MENSUAL
+            </p>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground">÷</span>
+              <select
+                value={mesesDiv}
+                onChange={(e) =>
+                  handleConfigChange(parseInt(e.target.value), desdeMes)
+                }
+                className="rounded border border-border bg-background px-2 py-0.5"
+              >
+                {[12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map((n) => (
+                  <option key={n} value={n}>
+                    {n} meses
+                  </option>
+                ))}
+              </select>
+              <span className="text-muted-foreground">desde</span>
+              <select
+                value={desdeMes}
+                onChange={(e) =>
+                  handleConfigChange(mesesDiv, parseInt(e.target.value))
+                }
+                className="rounded border border-border bg-background px-2 py-0.5"
+              >
+                {[
+                  "Ene",
+                  "Feb",
+                  "Mar",
+                  "Abr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Ago",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dic",
+                ].map((m, i) => (
+                  <option key={i} value={i + 1}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <p className="text-2xl font-medium md:text-4xl">
+            {formatARS(baseMensualArs)}
           </p>
           <p className="text-xs text-muted-foreground md:text-sm">
-            {formatUSD(totales.porMesUsd)}
+            {formatUSD(baseMensualUsd)}
           </p>
         </section>
       </div>

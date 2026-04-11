@@ -1,5 +1,12 @@
 import { convertirMonto } from "./conversion";
-import type { PresupuestoAporte, MovimientoParticular } from "@/lib/types";
+import { fijosVigentesEnMes } from "./fijos-del-mes";
+import { montoVigenteEnMes } from "./monto-vigente";
+import type {
+  PresupuestoAporte,
+  MovimientoParticular,
+  MovimientoFijo,
+  HistoricoMonto,
+} from "@/lib/types";
 
 export function calcularBaseMensual(
   aportes: PresupuestoAporte[],
@@ -15,10 +22,6 @@ export function calcularBaseMensual(
   return { ars: arsMes, usd: arsMes / cotizacion };
 }
 
-/**
- * ¿Este mes está cubierto por el presupuesto?
- * mesNum: 1-12, desdeMes: 1-12, mesesDivision: 1-12
- */
 export function mesEstaCubierto(
   mesNum: number,
   desdeMes: number,
@@ -30,12 +33,17 @@ export function mesEstaCubierto(
 
 export function calcularRestanteDelMes(
   baseMensualArs: number,
-  movimientosDelMes: MovimientoParticular[],
+  mesDB: string,
+  movimientosParticulares: MovimientoParticular[],
+  fijos: MovimientoFijo[],
+  historicos: HistoricoMonto[],
   cotizacion: number,
 ): { gastadoArs: number; ingresadoArs: number; restanteArs: number } {
   let gastado = 0;
   let ingresado = 0;
-  for (const m of movimientosDelMes) {
+
+  // Particulares del mes
+  for (const m of movimientosParticulares) {
     const { ars } = convertirMonto(
       Number(m.monto),
       m.moneda_anclaje,
@@ -44,6 +52,19 @@ export function calcularRestanteDelMes(
     if (m.tipo === "egreso") gastado += ars;
     else ingresado += ars;
   }
+
+  // Fijos vigentes este mes
+  const fijosVigentes = fijosVigentesEnMes(fijos, mesDB);
+  for (const f of fijosVigentes) {
+    const historicoFijo = historicos.filter(
+      (h) => h.movimiento_fijo_id === f.id,
+    );
+    const monto = montoVigenteEnMes(mesDB, Number(f.monto), historicoFijo);
+    const { ars } = convertirMonto(monto, f.moneda_anclaje, cotizacion);
+    if (f.tipo === "egreso") gastado += ars;
+    else ingresado += ars;
+  }
+
   return {
     gastadoArs: gastado,
     ingresadoArs: ingresado,

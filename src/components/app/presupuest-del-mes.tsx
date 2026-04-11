@@ -11,6 +11,8 @@ import type {
   PresupuestoAporte,
   PresupuestoConfigAnual,
   MovimientoParticular,
+  HistoricoMonto,
+  MovimientoFijo,
 } from "@/lib/types";
 
 export default function PresupuestoDelMes({
@@ -18,11 +20,15 @@ export default function PresupuestoDelMes({
   aportes,
   config,
   movimientos,
+  fijos,
+  historicos,
 }: {
   mesDB: string;
   aportes: PresupuestoAporte[];
   config: PresupuestoConfigAnual;
   movimientos: MovimientoParticular[];
+  fijos: MovimientoFijo[];
+  historicos: HistoricoMonto[];
 }) {
   const cotizacion = useCotizacionStore((s) => s.getValorActivo());
   const mesNum = parseInt(mesDB.slice(5, 7));
@@ -37,7 +43,10 @@ export default function PresupuestoDelMes({
   const base = calcularBaseMensual(aportes, config.meses_division, cotizacion);
   const { gastadoArs, ingresadoArs, restanteArs } = calcularRestanteDelMes(
     base.ars,
+    mesDB,
     movimientos,
+    fijos,
+    historicos,
     cotizacion,
   );
   const porcentajeGastado = base.ars > 0 ? (gastadoArs / base.ars) * 100 : 0;

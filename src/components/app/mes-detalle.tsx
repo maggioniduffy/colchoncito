@@ -358,7 +358,7 @@ function ItemRow({
             e.stopPropagation();
             onBorrar();
           }}
-          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-lg text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-lg text-muted-foreground transition-opacity hover:bg-destructive/10 hover:text-destructive md:opacity-0 md:group-hover:opacity-100"
         >
           ×
         </span>

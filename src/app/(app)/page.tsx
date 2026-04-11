@@ -7,7 +7,7 @@ import {
   listarMovimientosDelAño,
 } from "./movimientos/actions";
 import { listarFijos, listarHistoricosDeTodos } from "./fijos/actions";
-import { listarAportes } from "./presupuesto/actions";
+import { listarAportes, obtenerConfigAnual } from "./presupuesto/actions";
 import { toMesDB } from "@/lib/format";
 
 export default async function Dashboard() {
@@ -24,11 +24,13 @@ export default async function Dashboard() {
     { data: movimientosAño },
     { data: fijos },
     { data: aportes },
+    { data: config },
   ] = await Promise.all([
     listarMovimientosDelMes(mesActual),
     listarMovimientosDelAño(añoActual),
     listarFijos(),
     listarAportes(añoActual),
+    obtenerConfigAnual(añoActual),
   ]);
 
   const fijosIds = (fijos ?? []).map((f) => f.id);
@@ -59,7 +61,7 @@ export default async function Dashboard() {
         aportes={aportes ?? []}
         fijos={fijos ?? []}
         historicos={historicos ?? []}
-        movimientosDelAño={movimientosAño ?? []}
+        config={config!}
       />
 
       <GastosDelMes movimientos={movimientosMes ?? []} />

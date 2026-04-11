@@ -82,6 +82,8 @@ export default async function MesPage({
         aportes={aportes ?? []}
         config={config!}
         movimientos={movimientos ?? []}
+        fijos={fijos ?? []}
+        historicos={historicos ?? []}
       />
 
       <MesDetalle

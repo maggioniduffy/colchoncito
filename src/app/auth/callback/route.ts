@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/";
 
   console.log("[callback] code present:", !!code);
+  console.log("[callback] origin:", origin);
 
   if (code) {
     const supabase = await createClient();

@@ -29,10 +29,14 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Token inválido — limpiar la sesión
+    await supabase.auth.signOut();
+  }
   console.log("[middleware] user:", user ? user.email : "null");
 
   if (

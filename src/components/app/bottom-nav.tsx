@@ -15,7 +15,7 @@ const HomeIcon = (
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"
-    className="h-5 w-5"
+    className="h-6 w-6"
   >
     <path
       strokeLinecap="round"
@@ -31,7 +31,7 @@ const BudgetIcon = (
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"
-    className="h-5 w-5"
+    className="h-6 w-6"
   >
     <path
       strokeLinecap="round"
@@ -84,7 +84,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center justify-around border-t border-border bg-background px-5 py-3 md:hidden">
+    <nav className="flex items-center justify-around border-t border-border bg-background px-5 pb-6 pt-3 md:hidden">
       {items.slice(0, 2).map((item) => (
         <NavLink
           key={item.href}
@@ -115,7 +115,7 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       href={item.href}
-      className={`flex flex-col items-center gap-0.5 text-[10px] ${
+      className={`flex flex-col items-center gap-0.5 text-xs ${
         active ? "text-primary" : "text-muted-foreground"
       }`}
     >

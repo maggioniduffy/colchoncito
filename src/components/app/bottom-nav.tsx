@@ -84,7 +84,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center justify-around border-t border-border bg-background px-5 pb-6 pt-3 md:hidden">
+    <nav className="grid grid-cols-5 border-t border-border bg-background pb-8 pt-4 md:hidden">
       {items.slice(0, 2).map((item) => (
         <NavLink
           key={item.href}
@@ -95,7 +95,7 @@ export default function BottomNav() {
 
       <Link
         href="/nuevo"
-        className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-2xl font-light text-primary-foreground shadow-md active:opacity-90"
+        className="flex -mt-7 items-center justify-center justify-self-center h-14 w-14 rounded-full bg-primary text-2xl font-light text-primary-foreground shadow-md active:opacity-90"
       >
         +
       </Link>
@@ -115,7 +115,7 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       href={item.href}
-      className={`flex flex-col items-center gap-0.5 text-xs ${
+      className={`flex flex-col items-center justify-center gap-1 text-xs ${
         active ? "text-primary" : "text-muted-foreground"
       }`}
     >

@@ -154,7 +154,7 @@ export default function MesDetalle({
         </div>
       </div>
 
-      <div className="md:grid md:grid-cols-2 md:gap-6 md:max-h-[calc(100vh-22rem)] md:overflow-hidden">
+      <div className="max-h-[40vh] overflow-y-auto md:grid md:max-h-none md:grid-cols-2 md:gap-6 md:overflow-visible">
         <Seccion
           titulo="INGRESOS"
           items={ingresos}
@@ -257,7 +257,7 @@ function Seccion({
 
   return (
     <div>
-      <div className="mx-5 mb-2 flex items-center justify-between md:mx-0">
+      <div className="mx-5 mb-4 flex flex-col gap-1.5 md:mx-0">
         <span className="text-[11px] text-muted-foreground md:text-xs">
           {titulo}
         </span>
@@ -282,7 +282,7 @@ function Seccion({
           Sin movimientos
         </div>
       ) : (
-        <div className="mx-5 mb-4 flex max-h-80 flex-col gap-1.5 overflow-y-auto md:mx-0">
+        <div className="mx-5 mb-4 flex max-h-40 flex-col gap-1.5 overflow-y-auto md:mx-0 md:max-h-80">
           {[...fijos, ...particulares].map((item) => (
             <ItemRow
               key={item.id}

@@ -113,12 +113,20 @@ export default function PresupuestoView({
           <p className="text-lg font-medium md:text-2xl">Presupuesto</p>
           <p className="text-xs text-muted-foreground">Año {año}</p>
         </div>
-        <button
-          onClick={() => setCreando(true)}
-          className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 md:text-sm"
-        >
-          + Aporte
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href="/presupuesto/reportes"
+            className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted md:text-sm"
+          >
+            Reportes
+          </a>
+          <button
+            onClick={() => setCreando(true)}
+            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 md:text-sm"
+          >
+            + Aporte
+          </button>
+        </div>
       </div>
 
       <div className="md:grid md:grid-cols-2 md:gap-6">
@@ -195,8 +203,7 @@ export default function PresupuestoView({
       <div className="mx-5 mb-2 text-[11px] text-muted-foreground md:mx-0 md:text-xs">
         APORTES ({aportes.length})
       </div>
-
-      <div className="mx-5 flex flex-col gap-1.5 md:mx-0">
+      <div className="mx-5 flex max-h-80 flex-col gap-1.5 overflow-y-auto md:mx-0">
         {aportes.map((aporte) => {
           const cat = aporte.categoria_id
             ? categoriaPorId.get(aporte.categoria_id)

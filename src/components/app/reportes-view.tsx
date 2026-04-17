@@ -129,10 +129,36 @@ export default function ReportesView({
       .sort((a, b) => b.total - a.total);
   }, [año, movimientos, fijos, historicos, cotizacion, categorias]);
 
-  const totalGastadoAño = gastoPorCategoria.reduce(
-    (acc, x) => acc + x.total,
-    0,
-  );
+  const { totalGastadoAño, totalIngresadoAño } = useMemo(() => {
+    let gastado = 0;
+    let ingresado = 0;
+
+    // Particulares
+    for (const m of movimientos) {
+      const { ars } = convertirMonto(
+        Number(m.monto),
+        m.moneda_anclaje,
+        cotizacion,
+      );
+      if (m.tipo === "egreso") gastado += ars;
+      else ingresado += ars;
+    }
+
+    // Fijos de cada mes del año
+    for (let i = 0; i < 12; i++) {
+      const mesDB = `${año}-${String(i + 1).padStart(2, "0")}-01`;
+      const vigentes = fijosVigentesEnMes(fijos, mesDB);
+      for (const f of vigentes) {
+        const hist = historicos.filter((h) => h.movimiento_fijo_id === f.id);
+        const monto = montoVigenteEnMes(mesDB, Number(f.monto), hist);
+        const { ars } = convertirMonto(monto, f.moneda_anclaje, cotizacion);
+        if (f.tipo === "egreso") gastado += ars;
+        else ingresado += ars;
+      }
+    }
+
+    return { totalGastadoAño: gastado, totalIngresadoAño: ingresado };
+  }, [año, movimientos, fijos, historicos, cotizacion]);
 
   return (
     <>
@@ -207,7 +233,7 @@ export default function ReportesView({
         </div>
       </section>
 
-      <section className="mx-5 mb-5">
+      {/* <section className="mx-5 mb-5">
         <p className="mb-2 text-[11px] text-muted-foreground">
           GASTO TOTAL DEL AÑO · por categoría
         </p>
@@ -245,12 +271,12 @@ export default function ReportesView({
             })
           )}
         </div>
-      </section>
+      </section> */}
 
       {aportes.length > 0 && (
         <section className="mx-5 mb-5">
           <p className="mb-2 text-[11px] text-muted-foreground">
-            FONDO DEL AÑO VS GASTADO
+            FONDO DEL AÑO VS MOVIMIENTOS
           </p>
           <div className="rounded-lg border border-border p-3">
             <div className="mb-3 flex items-baseline justify-between">
@@ -262,6 +288,12 @@ export default function ReportesView({
               </span>
             </div>
             <div className="mb-3 flex items-baseline justify-between">
+              <span className="text-xs text-muted-foreground">Ingresado</span>
+              <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                +{formatARS(totalIngresadoAño)}
+              </span>
+            </div>
+            <div className="mb-3 flex items-baseline justify-between">
               <span className="text-xs text-muted-foreground">Gastado</span>
               <span className="text-sm font-medium text-destructive">
                 −{formatARS(totalGastadoAño)}
@@ -269,9 +301,17 @@ export default function ReportesView({
             </div>
             <div className="border-t border-border pt-2">
               <div className="flex items-baseline justify-between">
-                <span className="text-xs font-medium">Restante del fondo</span>
-                <span className="text-sm font-medium">
-                  {formatARS(fondoAnual.ars - totalGastadoAño)}
+                <span className="text-xs font-medium">Balance</span>
+                <span
+                  className={`text-sm font-medium ${
+                    fondoAnual.ars + totalIngresadoAño - totalGastadoAño < 0
+                      ? "text-destructive"
+                      : ""
+                  }`}
+                >
+                  {formatARS(
+                    fondoAnual.ars + totalIngresadoAño - totalGastadoAño,
+                  )}
                 </span>
               </div>
             </div>

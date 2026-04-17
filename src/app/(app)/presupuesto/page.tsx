@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { listarAportes, obtenerConfigAnual } from "./actions";
 import { listarCategorias } from "@/app/(app)/movimientos/actions";
 import PresupuestoView from "@/components/app/presupuesto-view";
+import Link from "next/link";
 
 export default async function PresupuestoPage() {
   const año = new Date().getFullYear();
@@ -15,15 +15,6 @@ export default async function PresupuestoPage() {
 
   return (
     <>
-      <header className="mb-0 flex items-center justify-end px-5 md:mb-4 md:px-0">
-        <Link
-          href="/presupuesto/reportes"
-          className="text-xs font-medium text-primary md:text-sm"
-        >
-          Reportes →
-        </Link>
-      </header>
-
       <PresupuestoView
         año={año}
         aportes={aportes ?? []}

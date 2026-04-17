@@ -37,6 +37,7 @@ export default function PresupuestoView({
       await guardarConfigAnual(año, meses, desde);
     });
   };
+
   const totales = useMemo(() => {
     let totalArs = 0;
     let totalUsd = 0;
@@ -54,10 +55,9 @@ export default function PresupuestoView({
     return {
       totalArs,
       totalUsd,
-      porMesArs: totalArs / 12,
-      porMesUsd: totalUsd / 12,
     };
   }, [aportes, cotizacion]);
+
   const baseMensualArs = mesesDiv > 0 ? totales.totalArs / mesesDiv : 0;
   const baseMensualUsd = baseMensualArs / cotizacion;
 
@@ -73,7 +73,6 @@ export default function PresupuestoView({
     setBorrando(null);
   };
 
-  // Empty state
   if (aportes.length === 0) {
     return (
       <>
@@ -107,7 +106,8 @@ export default function PresupuestoView({
   }
 
   return (
-    <>
+    <div className="flex flex-col h-[calc(100vh-120px)] md:h-auto">
+      {/* Header */}
       <div className="mb-4 flex items-center justify-between px-5 md:mb-6 md:px-0">
         <div>
           <p className="text-lg font-medium md:text-2xl">Presupuesto</p>
@@ -129,6 +129,7 @@ export default function PresupuestoView({
         </div>
       </div>
 
+      {/* Cards */}
       <div className="md:grid md:grid-cols-2 md:gap-6">
         <section className="mx-5 mb-4 rounded-xl bg-primary/10 p-4 md:mx-0 md:p-6">
           <p className="text-[11px] font-medium text-primary md:text-xs">
@@ -200,52 +201,52 @@ export default function PresupuestoView({
         </section>
       </div>
 
-      <div className="mx-5 mb-2 text-[11px] text-muted-foreground md:mx-0 md:text-xs">
-        APORTES ({aportes.length})
-      </div>
-      <div className="mx-5 flex max-h-80 flex-col gap-1.5 overflow-y-auto md:mx-0">
-        {aportes.map((aporte) => {
-          const cat = aporte.categoria_id
-            ? categoriaPorId.get(aporte.categoria_id)
-            : null;
-          const { ars, usd } = convertirMonto(
-            Number(aporte.monto),
-            aporte.moneda,
-            cotizacion,
-          );
-          return (
-            <button
-              key={aporte.id}
-              onClick={() => setEditando(aporte)}
-              className="group relative flex w-full cursor-pointer items-center justify-between rounded-lg border border-border px-3 py-2.5 text-left transition-colors hover:bg-muted/50 md:px-4 md:py-3.5"
-            >
-              <span className="pointer-events-none absolute -top-7 left-1/2 z-10 -translate-x-1/2 rounded-md bg-foreground px-2 py-0.5 text-[10px] font-medium text-background opacity-0 transition-opacity group-hover:opacity-100">
-                Editar
-              </span>
+      {/* Lista */}
+      <div className="flex flex-col flex-1 min-h-0">
+        <div className="mx-5 mb-2 text-[11px] text-muted-foreground md:mx-0 md:text-xs">
+          APORTES ({aportes.length})
+        </div>
 
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium md:text-base">
-                    {aporte.nombre}
-                  </span>
-                  {cat && (
-                    <span
-                      className="rounded-full px-1.5 py-0.5 text-[9px] font-medium"
-                      style={{
-                        backgroundColor: cat.color + "33",
-                        color: cat.color,
-                      }}
-                    >
-                      {cat.nombre.toUpperCase()}
+        <div className="mx-5 flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto pr-1 md:mx-0">
+          {aportes.map((aporte) => {
+            const cat = aporte.categoria_id
+              ? categoriaPorId.get(aporte.categoria_id)
+              : null;
+
+            const { ars, usd } = convertirMonto(
+              Number(aporte.monto),
+              aporte.moneda,
+              cotizacion,
+            );
+
+            return (
+              <button
+                key={aporte.id}
+                onClick={() => setEditando(aporte)}
+                className="group relative flex w-full items-center justify-between rounded-lg border border-border px-3 py-2.5 text-left hover:bg-muted/50 md:px-4 md:py-3.5"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium md:text-base">
+                      {aporte.nombre}
                     </span>
-                  )}
+                    {cat && (
+                      <span
+                        className="rounded-full px-1.5 py-0.5 text-[9px] font-medium"
+                        style={{
+                          backgroundColor: cat.color + "33",
+                          color: cat.color,
+                        }}
+                      >
+                        {cat.nombre.toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[11px] text-muted-foreground md:text-xs">
+                    {new Date(aporte.fecha_aporte).toLocaleDateString("es-AR")}
+                  </div>
                 </div>
-                <div className="text-[11px] text-muted-foreground md:text-xs">
-                  {new Date(aporte.fecha_aporte).toLocaleDateString("es-AR")}
-                  {aporte.notas && ` · ${aporte.notas}`}
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
+
                 <div className="text-right">
                   <div className="text-sm font-medium md:text-base">
                     {aporte.moneda === "USD" ? formatUSD(usd) : formatARS(ars)}
@@ -254,23 +255,13 @@ export default function PresupuestoView({
                     {aporte.moneda === "USD" ? formatARS(ars) : formatUSD(usd)}
                   </div>
                 </div>
-                <span
-                  role="button"
-                  tabIndex={0}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setBorrando(aporte);
-                  }}
-                  className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-lg text-muted-foreground transition-opacity hover:bg-destructive/10 hover:text-destructive md:opacity-0 md:group-hover:opacity-100"
-                >
-                  ×
-                </span>
-              </div>
-            </button>
-          );
-        })}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
+      {/* Modals */}
       {creando && (
         <AporteModal
           año={año}
@@ -289,13 +280,13 @@ export default function PresupuestoView({
       {borrando && (
         <ConfirmModal
           titulo="Borrar aporte"
-          mensaje={`¿Borrar "${borrando.nombre}"? Se va a restar del fondo del año.`}
+          mensaje={`¿Borrar "${borrando.nombre}"?`}
           textoConfirmar="Borrar"
           variante="destructive"
           onConfirmar={handleConfirmarBorrar}
           onCancelar={() => setBorrando(null)}
         />
       )}
-    </>
+    </div>
   );
 }

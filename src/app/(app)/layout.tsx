@@ -35,9 +35,9 @@ export default async function AppLayout({
     <div className="flex min-h-screen bg-background">
       <CotizacionLoader cotizaciones={cotizaciones} activa={activa} />
       <Sidebar />
-      <div className="flex min-h-screen flex-1 flex-col">
-        <main className="flex-1 overflow-y-auto pb-2 pt-3 md:px-8 md:pt-8">
-          <div className="mx-auto w-full max-w-5xl">{children}</div>
+      <div className="flex max-h-screen flex-1 flex-col">
+        <main className="h-full flex-1 overflow-y-auto pb-2 pt-3 md:px-8 md:pt-8">
+          <div className="h-full mx-auto w-full max-w-5xl">{children}</div>
         </main>
         <BottomNav />
       </div>

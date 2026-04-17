@@ -135,6 +135,12 @@ export default function MesDetalle({
     setBorrandoItem(null);
   };
 
+  const ingresosCount = ingresos.length;
+  const egresosCount = egresos.length;
+
+  const ingresosGrow = ingresosCount >= egresosCount;
+  const egresosGrow = egresosCount > ingresosCount;
+
   return (
     <>
       <div className="mx-5 mb-4 grid grid-cols-2 gap-2 md:mx-0 md:gap-4">
@@ -154,26 +160,30 @@ export default function MesDetalle({
         </div>
       </div>
 
-      <div className="max-h-[40vh] overflow-y-auto md:grid md:max-h-none md:grid-cols-2 md:gap-6 md:overflow-visible">
-        <Seccion
-          titulo="INGRESOS"
-          items={ingresos}
-          cotizacion={cotizacion}
-          onEditar={handleEditar}
-          onBorrar={setBorrandoItem}
-          onNuevoFijo={() => setCreandoFijo(true)}
-          onNuevoParticular={() => setCreandoParticular(true)}
-        />
+      <div className="flex flex-col md:grid md:grid-cols-2 md:gap-6 max-h-[calc(100vh-400px)]">
+        <div className={`${ingresosGrow ? "flex-1 min-h-0" : ""}`}>
+          <Seccion
+            titulo="INGRESOS"
+            items={ingresos}
+            cotizacion={cotizacion}
+            onEditar={handleEditar}
+            onBorrar={setBorrandoItem}
+            onNuevoFijo={() => setCreandoFijo(true)}
+            onNuevoParticular={() => setCreandoParticular(true)}
+          />
+        </div>
 
-        <Seccion
-          titulo="EGRESOS"
-          items={egresos}
-          cotizacion={cotizacion}
-          onEditar={handleEditar}
-          onBorrar={setBorrandoItem}
-          onNuevoFijo={() => setCreandoFijo(true)}
-          onNuevoParticular={() => setCreandoParticular(true)}
-        />
+        <div className={`${egresosGrow ? "flex-1 min-h-0" : ""}`}>
+          <Seccion
+            titulo="EGRESOS"
+            items={egresos}
+            cotizacion={cotizacion}
+            onEditar={handleEditar}
+            onBorrar={setBorrandoItem}
+            onNuevoFijo={() => setCreandoFijo(true)}
+            onNuevoParticular={() => setCreandoParticular(true)}
+          />
+        </div>
       </div>
 
       <section className="mx-5 mb-4 rounded-lg bg-primary/10 p-3 md:mx-0 md:mt-6 md:p-5">
@@ -256,7 +266,7 @@ function Seccion({
   const particulares = items.filter((i) => i.origen === "particular");
 
   return (
-    <div>
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="mx-5 mb-4 flex flex-col gap-1.5 md:mx-0">
         <span className="text-[11px] text-muted-foreground md:text-xs">
           {titulo}
@@ -282,7 +292,8 @@ function Seccion({
           Sin movimientos
         </div>
       ) : (
-        <div className="mx-5 mb-4 flex max-h-40 flex-col gap-1.5 overflow-y-auto md:mx-0 md:max-h-80">
+        <div className="mx-5 mb-4 flex-1 flex flex-col gap-1.5 overflow-y-auto pr-1 md:mx-0">
+          {" "}
           {[...fijos, ...particulares].map((item) => (
             <ItemRow
               key={item.id}

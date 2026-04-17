@@ -53,7 +53,7 @@ export default async function MesPage({
     `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`;
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       <header className="mb-4 flex items-center justify-between px-5 md:mb-6 md:px-0 ">
         <div className="flex items-center gap-3">
           <Link
@@ -93,6 +93,6 @@ export default async function MesPage({
         historicos={historicos ?? []}
         categorias={categorias ?? []}
       />
-    </>
+    </div>
   );
 }

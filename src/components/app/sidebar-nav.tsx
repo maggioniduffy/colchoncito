@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CircleQuestionMarkIcon } from "lucide-react";
 
 const items = [
   {
@@ -79,6 +80,11 @@ const items = [
         />
       </svg>
     ),
+  },
+  {
+    href: "/welcome",
+    label: "¿Como funciona?",
+    icon: <CircleQuestionMarkIcon className="h-5 w-5" />,
   },
 ];
 

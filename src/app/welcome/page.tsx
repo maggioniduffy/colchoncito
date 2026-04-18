@@ -196,9 +196,6 @@ export default function WelcomePage() {
       </section>
 
       <Footer />
-
-      {/* Floating CTA — aparece al scrollear */}
-      <FloatingCTA />
     </div>
   );
 }

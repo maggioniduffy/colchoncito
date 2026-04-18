@@ -63,7 +63,7 @@ export default function MasPage() {
       </div>
 
       <div className="mx-5 text-[11px] text-muted-foreground md:mx-0">
-        Colchoncito · v0.1
+        Colchoncito · v2.0
       </div>
     </>
   );

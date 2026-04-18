@@ -4,6 +4,7 @@ import { fetchAllCotizaciones } from "@/lib/cotizaciones/fetch";
 import { createClient } from "@/lib/supabase/server";
 import CotizacionLoader from "./cotizacion/loader";
 import type { TipoCotizacion } from "@/lib/types";
+import Footer from "@/components/app/footer";
 
 export default async function AppLayout({
   children,
@@ -39,6 +40,9 @@ export default async function AppLayout({
         <main className="h-full flex-1 overflow-y-auto pb-2 pt-3 md:px-8 md:pt-8">
           <div className="h-full mx-auto w-full max-w-5xl">{children}</div>
         </main>
+        <div className="hidden md:block">
+          <Footer />
+        </div>
         <BottomNav />
       </div>
     </div>

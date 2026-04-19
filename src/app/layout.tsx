@@ -33,6 +33,10 @@ export const metadata: Metadata = {
     description: "Tus finanzas en pesos y dólares, sin planillas.",
     images: ["https://colchoncito.vercel.app/og.png"],
   },
+  icons: {
+    icon: "/favicon-32.png",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({

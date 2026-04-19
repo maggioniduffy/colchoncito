@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Footer from "@/components/app/footer";
 import { createClient } from "@/lib/supabase/client";
 
@@ -17,8 +18,13 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-background p-6">
       <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-2xl font-medium text-primary-foreground">
-          C
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl font-medium text-primary-foreground">
+          <Image
+            src="/android-chrome-512x512.png"
+            alt="Logo"
+            width={64}
+            height={64}
+          />
         </div>
         <h1 className="text-2xl font-bold text-foreground">Colchoncito</h1>
         <p className="mt-2 text-sm text-muted-foreground">

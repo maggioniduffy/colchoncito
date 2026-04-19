@@ -1,5 +1,6 @@
 import Footer from "@/components/app/footer";
 import Link from "next/link";
+import Image from "next/image";
 
 const FEATURES = [
   {
@@ -51,8 +52,13 @@ export default function WelcomePage() {
       <nav className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground">
-              C
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium text-primary-foreground">
+              <Image
+                src="/android-chrome-512x512.png"
+                alt="Logo"
+                width={32}
+                height={32}
+              />
             </div>
             <span className="text-base font-medium">Colchoncito</span>
           </div>

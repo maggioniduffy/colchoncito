@@ -54,7 +54,7 @@ export default function WelcomePage() {
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium text-primary-foreground">
               <Image
-                src="/android-chrome-512x512.png"
+                src="/favicon-32x32.png"
                 alt="Logo"
                 width={32}
                 height={32}

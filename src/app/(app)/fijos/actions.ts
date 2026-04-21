@@ -76,7 +76,7 @@ export async function crearFijo(input: MovimientoFijoInput) {
   const { error } = await supabase.from("movimientos_fijos").insert({
     user_id: user.id,
     ...input,
-    fecha_inicio: input.fecha_inicio ?? new Date().toISOString().slice(0, 10),
+    fecha_inicio: input.fecha_inicio ?? new Date().toLocaleDateString("en-CA"),
   });
 
   if (error) return { error: error.message };

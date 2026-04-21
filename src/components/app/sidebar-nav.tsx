@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CircleQuestionMarkIcon } from "lucide-react";
+
+function getMesActual(): string {
+  const now = new Date();
+  const año = now.getFullYear();
+  const mes = String(now.getMonth() + 1).padStart(2, "0");
+  return `${año}${mes}`;
+}
 
 const items = [
   {
@@ -44,7 +50,7 @@ const items = [
     ),
   },
   {
-    href: "/mes/202604",
+    href: `/mes/${getMesActual()}`,
     label: "Este mes",
     icon: (
       <svg
@@ -81,11 +87,6 @@ const items = [
       </svg>
     ),
   },
-  {
-    href: "/welcome",
-    label: "¿Como funciona?",
-    icon: <CircleQuestionMarkIcon className="h-5 w-5" />,
-  },
 ];
 
 export default function SidebarNav() {
@@ -93,13 +94,21 @@ export default function SidebarNav() {
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
+    return pathname.startsWith(
+      href.split("/mes/")[0] === ""
+        ? href
+        : href.startsWith("/mes/")
+          ? "/mes"
+          : href,
+    );
   };
 
   return (
     <nav className="flex flex-col gap-1">
       {items.map((item) => {
-        const active = isActive(item.href);
+        const active = item.href.startsWith("/mes/")
+          ? pathname.startsWith("/mes")
+          : isActive(item.href);
         return (
           <Link
             key={item.href}

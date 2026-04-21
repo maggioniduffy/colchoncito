@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type NavItem = {
-  href: string;
-  label: string;
-  icon: React.ReactNode;
-};
+function getMesActual(): string {
+  const now = new Date();
+  const año = now.getFullYear();
+  const mes = String(now.getMonth() + 1).padStart(2, "0");
+  return `${año}${mes}`;
+}
 
 const HomeIcon = (
   <svg
@@ -47,7 +48,7 @@ const MonthIcon = (
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"
-    className="h-5 w-5"
+    className="h-6 w-6"
   >
     <path
       strokeLinecap="round"
@@ -63,7 +64,7 @@ const MoreIcon = (
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"
-    className="h-5 w-5"
+    className="h-6 w-6"
   >
     <path
       strokeLinecap="round"
@@ -73,39 +74,43 @@ const MoreIcon = (
   </svg>
 );
 
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+};
+
 const items: NavItem[] = [
   { href: "/", label: "Inicio", icon: HomeIcon },
   { href: "/presupuesto", label: "Presup.", icon: BudgetIcon },
-  { href: "/mes/202604", label: "Mes", icon: MonthIcon },
+  { href: `/mes/${getMesActual()}`, label: "Mes", icon: MonthIcon },
   { href: "/mas", label: "Más", icon: MoreIcon },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
 
+  function isActive(href: string): boolean {
+    if (href === "/") return pathname === "/";
+    if (href.startsWith("/mes/")) return pathname.startsWith("/mes");
+    return pathname.startsWith(href);
+  }
+
   return (
     <nav className="grid grid-cols-5 border-t border-border bg-background pb-8 pt-4 md:hidden">
       {items.slice(0, 2).map((item) => (
-        <NavLink
-          key={item.href}
-          item={item}
-          active={isActive(pathname, item.href)}
-        />
+        <NavLink key={item.href} item={item} active={isActive(item.href)} />
       ))}
 
       <Link
         href="/nuevo"
-        className="flex -mt-7 items-center justify-center justify-self-center h-14 w-14 rounded-full bg-primary text-2xl font-light text-primary-foreground shadow-md active:opacity-90"
+        className="-mt-7 flex h-14 w-14 items-center justify-center justify-self-center rounded-full bg-primary text-2xl font-light text-primary-foreground shadow-md active:opacity-90"
       >
         +
       </Link>
 
       {items.slice(2).map((item) => (
-        <NavLink
-          key={item.href}
-          item={item}
-          active={isActive(pathname, item.href)}
-        />
+        <NavLink key={item.href} item={item} active={isActive(item.href)} />
       ))}
     </nav>
   );
@@ -123,9 +128,4 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
       <span>{item.label}</span>
     </Link>
   );
-}
-
-function isActive(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/";
-  return pathname.startsWith(href);
 }

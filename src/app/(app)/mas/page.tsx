@@ -67,7 +67,9 @@ export default function MasPage() {
       </div>
 
       <div className="mx-5 mt-8 border-t border-border pt-6 md:mx-0">
-        <p className="mb-3 text-xs text-muted-foreground">DESARROLLADO POR</p>
+        <p className="mb-3 text-xs text-muted-foreground">
+          DESARROLLADO POR <b className="text-blue">@maggioniduffy</b>
+        </p>
         <div className="flex flex-col gap-2">
           <a
             href="https://maggioniduffy.vercel.app/"

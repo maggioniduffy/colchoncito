@@ -62,10 +62,6 @@ export default function MasPage() {
         </form>
       </div>
 
-      <div className="mx-5 text-[11px] text-muted-foreground md:mx-0">
-        Colchoncito · v2.1
-      </div>
-
       <div className="mx-5 mt-8 border-t border-border pt-6 md:mx-0">
         <p className="mb-3 text-xs text-muted-foreground">
           DESARROLLADO POR <b className="text-blue">@maggioniduffy</b>
@@ -92,7 +88,7 @@ export default function MasPage() {
           </a>
         </div>
         <p className="mt-6 text-center text-[11px] text-muted-foreground">
-          Colchoncito · hecho en Argentina 🇦🇷
+          Colchoncito · v2.1 · hecho en Argentina 🇦🇷
         </p>
       </div>
     </>

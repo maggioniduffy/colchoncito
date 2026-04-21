@@ -45,6 +45,10 @@ export default function FijoModal({ fijo, categorias, onClose }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  const [fechaInicio, setFechaInicio] = useState<string>(
+    fijo?.fecha_inicio ?? new Date().toLocaleDateString("en-CA"),
+  );
+
   const montoCambio = editando && parseFloat(monto) !== Number(fijo!.monto);
 
   const handleSubmit = (e: FormEvent) => {
@@ -74,6 +78,7 @@ export default function FijoModal({ fijo, categorias, onClose }: Props) {
       plazo_fecha_fin: plazoTipo === "hasta_fecha" ? plazoFechaFin : null,
       plazo_repeticiones_restantes:
         plazoTipo === "n_repeticiones" ? parseInt(plazoRepeticiones) : null,
+      fecha_inicio: fechaInicio, // ← agregá esto
     };
 
     startTransition(async () => {
@@ -256,6 +261,18 @@ export default function FijoModal({ fijo, categorias, onClose }: Props) {
                 value={diaDelMes}
                 onChange={(e) => setDiaDelMes(e.target.value)}
                 required
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs text-muted-foreground">
+                DESDE CUÁNDO APLICA
+              </label>
+              <input
+                type="month"
+                value={fechaInicio.slice(0, 7)}
+                onChange={(e) => setFechaInicio(e.target.value + "-01")}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
               />
             </div>

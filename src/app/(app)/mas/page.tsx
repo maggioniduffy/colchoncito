@@ -63,7 +63,35 @@ export default function MasPage() {
       </div>
 
       <div className="mx-5 text-[11px] text-muted-foreground md:mx-0">
-        Colchoncito · v2.1 · by @maggioniduffy
+        Colchoncito · v2.1
+      </div>
+
+      <div className="mx-5 mt-8 border-t border-border pt-6 md:mx-0">
+        <p className="mb-3 text-xs text-muted-foreground">DESARROLLADO POR</p>
+        <div className="flex flex-col gap-2">
+          <a
+            href="https://maggioniduffy.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between rounded-lg border border-border px-4 py-3 text-sm hover:bg-muted"
+          >
+            <span>Portfolio</span>
+            <span className="text-muted-foreground">→</span>
+          </a>
+
+          <a
+            href="https://www.linkedin.com/in/maggioniduffy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between rounded-lg border border-border px-4 py-3 text-sm hover:bg-muted"
+          >
+            <span>LinkedIn</span>
+            <span className="text-muted-foreground">→</span>
+          </a>
+        </div>
+        <p className="mt-6 text-center text-[11px] text-muted-foreground">
+          Colchoncito · hecho en Argentina 🇦🇷
+        </p>
       </div>
     </>
   );

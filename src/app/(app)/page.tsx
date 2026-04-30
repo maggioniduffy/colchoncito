@@ -9,6 +9,12 @@ import {
 import { listarFijos, listarHistoricosDeTodos } from "./fijos/actions";
 import { listarAportes, obtenerConfigAnual } from "./presupuesto/actions";
 import { toMesDB } from "@/lib/format";
+import { obtenerCierreMes } from "./cierre/actions";
+import CierreMesDetector from "@/components/app/cierre-mes-detector";
+import { getMesAnteriorDB } from "@/lib/calculos/sobrante-mes";
+
+// dentro del componente, calculá el mes anterior:
+const mesAnterior = getMesAnteriorDB();
 
 export default async function Dashboard() {
   const authUser = await getUser();
@@ -25,12 +31,16 @@ export default async function Dashboard() {
     { data: fijos },
     { data: aportes },
     { data: config },
+    { data: movimientosMesAnterior },
+    { data: cierreMesAnterior },
   ] = await Promise.all([
-    listarMovimientosDelMes(mesActual),
-    listarMovimientosDelAño(añoActual),
-    listarFijos(),
-    listarAportes(añoActual),
-    obtenerConfigAnual(añoActual),
+    listarMovimientosDelMes(mesActual), // → movimientosMes
+    listarMovimientosDelAño(añoActual), // → movimientosAño
+    listarFijos(), // → fijos
+    listarAportes(añoActual), // → aportes
+    obtenerConfigAnual(añoActual), // → config
+    listarMovimientosDelMes(mesAnterior), // → movimientosMesAnterior
+    obtenerCierreMes(mesAnterior), // → cierreMesAnterior
   ]);
 
   const fijosIds = (fijos ?? []).map((f) => f.id);
@@ -38,6 +48,14 @@ export default async function Dashboard() {
 
   return (
     <>
+      <CierreMesDetector
+        aportes={aportes ?? []}
+        config={config!}
+        movimientosMesAnterior={movimientosMesAnterior ?? []}
+        fijos={fijos ?? []}
+        historicos={historicos ?? []}
+        cierreMesAnteriorYaResuelto={!!cierreMesAnterior}
+      />
       <header className="mb-4 flex items-center justify-between px-5 md:mb-6 md:px-0">
         <div>
           <p className="text-sm text-muted-foreground">Hola, {user.nombre}</p>

@@ -45,7 +45,6 @@ export default function MesDetalle({
   categorias: Categoria[];
 }) {
   const cotizacion = useCotizacionStore((s) => s.getValorActivo());
-
   const [editandoParticular, setEditandoParticular] =
     useState<MovimientoParticular | null>(null);
   const [editandoFijo, setEditandoFijo] = useState<MovimientoFijo | null>(null);

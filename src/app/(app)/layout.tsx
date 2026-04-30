@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import CotizacionLoader from "./cotizacion/loader";
 import type { TipoCotizacion } from "@/lib/types";
 import Footer from "@/components/app/footer";
+import SwUpdatePrompt from "@/components/app/sw-update-prompt";
 
 export default async function AppLayout({
   children,
@@ -34,6 +35,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen bg-background">
+      <SwUpdatePrompt />
       <CotizacionLoader cotizaciones={cotizaciones} activa={activa} />
       <Sidebar />
       <div className="flex max-h-screen flex-1 flex-col">

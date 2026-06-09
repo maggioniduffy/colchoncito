@@ -223,12 +223,15 @@ export default function PresupuestoView({
               <button
                 key={aporte.id}
                 onClick={() => setEditando(aporte)}
-                className="group relative flex w-full items-center justify-between rounded-lg border border-border px-3 py-2.5 text-left hover:bg-muted/50 md:px-4 md:py-3.5"
+                className="group relative flex w-full cursor-pointer items-center justify-between rounded-lg border border-border px-3 py-2.5 text-left hover:bg-muted/50 md:px-4 md:py-3.5"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium md:text-base">
                       {aporte.nombre}
+                    </span>
+                    <span className="text-xs opacity-0 transition-opacity group-hover:opacity-40">
+                      ✏️
                     </span>
                     {cat && (
                       <span
@@ -255,6 +258,17 @@ export default function PresupuestoView({
                     {aporte.moneda === "USD" ? formatARS(ars) : formatUSD(usd)}
                   </div>
                 </div>
+
+                <span
+                  role="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setBorrando(aporte);
+                  }}
+                  className="ml-3 text-lg leading-none text-muted-foreground opacity-100 transition-opacity hover:text-destructive md:opacity-0 md:group-hover:opacity-100"
+                >
+                  ×
+                </span>
               </button>
             );
           })}

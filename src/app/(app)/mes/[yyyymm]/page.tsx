@@ -13,6 +13,7 @@ import {
   listarAportes,
   obtenerConfigAnual,
 } from "@/app/(app)/presupuesto/actions";
+import { obtenerCierreMes } from "@/app/(app)/cierre/actions";
 import PresupuestoDelMes from "@/components/app/presupuest-del-mes";
 
 export default async function MesPage({
@@ -32,12 +33,14 @@ export default async function MesPage({
     { data: fijos },
     { data: aportes },
     { data: config },
+    { data: cierreMes },
   ] = await Promise.all([
     listarMovimientosDelMes(mesDB),
     listarCategorias(),
     listarFijos(),
     listarAportes(yearInt),
     obtenerConfigAnual(yearInt),
+    obtenerCierreMes(mesDB),
   ]);
 
   const fijosIds = (fijos ?? []).map((f) => f.id);
@@ -84,6 +87,7 @@ export default async function MesPage({
         movimientos={movimientos ?? []}
         fijos={fijos ?? []}
         historicos={historicos ?? []}
+        cierreMes={cierreMes}
       />
 
       <MesDetalle

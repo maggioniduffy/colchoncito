@@ -251,6 +251,26 @@ export async function borrarAporte(id: number) {
   return { success: true };
 }
 
+export async function borrarTodosLosAportes(año: number) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "No autenticado" };
+
+  const { error } = await supabase
+    .from("presupuesto_aportes")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("año", año);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+  return { success: true };
+}
+
 export async function obtenerConfigAnual(año: number) {
   const supabase = await createClient();
   const {

@@ -4,12 +4,14 @@ import { useState, useMemo, useTransition } from "react";
 import { useCotizacionStore } from "@/stores/cotizacion-store";
 import { convertirMonto } from "@/lib/calculos/conversion";
 import { formatARS, formatUSD } from "@/lib/format";
-import { borrarAporte } from "@/app/(app)/presupuesto/actions";
+import {
+  borrarAporte,
+  borrarTodosLosAportes,
+  guardarConfigAnual,
+} from "@/app/(app)/presupuesto/actions";
 import AporteModal from "./aporte-modal";
 import ConfirmModal from "./confirm-modal";
-import type { PresupuestoAporte, Categoria } from "@/lib/types";
-import { guardarConfigAnual } from "@/app/(app)/presupuesto/actions";
-import type { PresupuestoConfigAnual } from "@/lib/types";
+import type { PresupuestoAporte, Categoria, PresupuestoConfigAnual } from "@/lib/types";
 
 export default function PresupuestoView({
   año,
@@ -26,6 +28,7 @@ export default function PresupuestoView({
   const [creando, setCreando] = useState(false);
   const [editando, setEditando] = useState<PresupuestoAporte | null>(null);
   const [borrando, setBorrando] = useState<PresupuestoAporte | null>(null);
+  const [borrandoTodos, setBorrandoTodos] = useState(false);
   const [mesesDiv, setMesesDiv] = useState(config.meses_division);
   const [desdeMes, setDesdeMes] = useState(config.desde_mes);
   const [, startTransition] = useTransition();
@@ -71,6 +74,11 @@ export default function PresupuestoView({
     if (!borrando) return;
     await borrarAporte(borrando.id);
     setBorrando(null);
+  };
+
+  const handleConfirmarBorrarTodos = async () => {
+    await borrarTodosLosAportes(año);
+    setBorrandoTodos(false);
   };
 
   if (aportes.length === 0) {
@@ -203,8 +211,19 @@ export default function PresupuestoView({
 
       {/* Lista */}
       <div className="flex flex-col flex-1 min-h-0">
-        <div className="mx-5 mb-2 text-[11px] text-muted-foreground md:mx-0 md:text-xs">
-          APORTES ({aportes.length})
+        <div className="mx-5 mb-2 flex items-center justify-between md:mx-0">
+          <span className="text-[11px] text-muted-foreground md:text-xs">
+            APORTES ({aportes.length})
+          </span>
+          {aportes.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setBorrandoTodos(true)}
+              className="text-[11px] text-destructive hover:underline md:text-xs font-medium"
+            >
+              Borrar todos
+            </button>
+          )}
         </div>
 
         <div className="mx-5 flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto pr-1 md:mx-0">
@@ -261,11 +280,20 @@ export default function PresupuestoView({
 
                 <span
                   role="button"
+                  tabIndex={0}
+                  title="Borrar aporte"
+                  aria-label={`Borrar ${aporte.nombre}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     setBorrando(aporte);
                   }}
-                  className="ml-3 text-lg leading-none text-muted-foreground opacity-100 transition-opacity hover:text-destructive md:opacity-0 md:group-hover:opacity-100"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.stopPropagation();
+                      setBorrando(aporte);
+                    }
+                  }}
+                  className="ml-3 p-1 text-lg leading-none text-muted-foreground transition-colors hover:text-destructive md:opacity-0 md:group-hover:opacity-100"
                 >
                   ×
                 </span>
@@ -299,6 +327,16 @@ export default function PresupuestoView({
           variante="destructive"
           onConfirmar={handleConfirmarBorrar}
           onCancelar={() => setBorrando(null)}
+        />
+      )}
+      {borrandoTodos && (
+        <ConfirmModal
+          titulo="Borrar todos los aportes"
+          mensaje={`¿Estás seguro de borrar todos los ${aportes.length} aportes cargados para ${año}? Esta acción no se puede deshacer.`}
+          textoConfirmar="Borrar todos"
+          variante="destructive"
+          onConfirmar={handleConfirmarBorrarTodos}
+          onCancelar={() => setBorrandoTodos(false)}
         />
       )}
     </div>

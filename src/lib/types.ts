@@ -162,4 +162,13 @@ export type PresupuestoConfigAnual = {
   desde_mes: number;
 };
 
+export type CierreMes = {
+  id?: number;
+  user_id: string;
+  mes: string;
+  accion: "aporte" | "mes_siguiente" | "nada";
+  monto: number;
+  created_at?: string;
+};
+
 export type TipoCotizacion = "oficial" | "mep" | "blue" | "crypto" | "custom";

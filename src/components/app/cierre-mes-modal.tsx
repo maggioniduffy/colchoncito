@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { registrarCierreMes } from "@/app/(app)/cierre/actions";
+import { registrarCierreMes, deshacerCierreMes } from "@/app/(app)/cierre/actions";
 import { formatARS } from "@/lib/format";
 
 type Accion = "aporte" | "mes_siguiente" | "nada";
@@ -14,14 +14,14 @@ const OPCIONES: {
 }[] = [
   {
     value: "aporte",
-    label: "Sumarlo al fondo del año",
-    desc: "Se agrega como un nuevo aporte al presupuesto anual y aumenta la base mensual.",
+    label: "Sumarlo al presupuesto general",
+    desc: "Se agrega como un nuevo aporte al presupuesto anual del año y aumenta la base mensual.",
     icono: "📊",
   },
   {
     value: "mes_siguiente",
     label: "Sumarlo al mes que viene",
-    desc: "Se agrega como ingreso extraordinario del mes entrante. Solo afecta ese mes.",
+    desc: "Se agrega como ingreso extraordinario del mes entrante. Solo afecta a ese mes.",
     icono: "📅",
   },
   {
@@ -36,14 +36,19 @@ export default function CierreMesModal({
   mesDB,
   sobrante,
   nombreMes,
+  accionExistente,
   onClose,
 }: {
   mesDB: string;
   sobrante: number;
   nombreMes: string;
+  accionExistente?: Accion | null;
   onClose: () => void;
 }) {
-  const [seleccion, setSeleccion] = useState<Accion | null>(null);
+  const [seleccion, setSeleccion] = useState<Accion | null>(
+    accionExistente ?? "aporte",
+  );
+  const [monto, setMonto] = useState<string>(sobrante.toString());
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -51,8 +56,26 @@ export default function CierreMesModal({
     if (!seleccion) return;
     setError(null);
 
+    const montoNum = parseFloat(monto);
+    if (isNaN(montoNum) || montoNum < 0) {
+      setError("Ingresá un monto válido");
+      return;
+    }
+
     startTransition(async () => {
-      const result = await registrarCierreMes(mesDB, seleccion, sobrante);
+      const result = await registrarCierreMes(mesDB, seleccion, montoNum);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        onClose();
+      }
+    });
+  };
+
+  const handleDeshacer = () => {
+    setError(null);
+    startTransition(async () => {
+      const result = await deshacerCierreMes(mesDB);
       if (result.error) {
         setError(result.error);
       } else {
@@ -62,8 +85,14 @@ export default function CierreMesModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/60 md:items-center md:p-4">
-      <div className="flex max-h-[92dvh] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-card md:max-h-[85vh] md:rounded-2xl">
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/60 md:items-center md:p-4"
+      onClick={onClose}
+    >
+      <div
+        className="flex max-h-[92dvh] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-card md:max-h-[85vh] md:rounded-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-center pt-2 md:hidden">
           <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
         </div>
@@ -71,16 +100,34 @@ export default function CierreMesModal({
         <div className="flex-1 overflow-y-auto p-5">
           <div className="mb-1 text-center text-2xl">🎉</div>
           <h2 className="text-center text-lg font-medium">
-            Cerraste {nombreMes} con sobrante
+            Remanente de {nombreMes}
           </h2>
           <p className="mt-1 text-center text-2xl font-medium text-emerald-600 dark:text-emerald-400">
             {formatARS(sobrante)}
           </p>
-          <p className="mt-2 text-center text-xs text-muted-foreground">
-            ¿Qué querés hacer con ese dinero?
+          <p className="mt-1 text-center text-xs text-muted-foreground">
+            Elegí dónde querés transferir o sumar este remanente
           </p>
 
-          <div className="mt-5 flex flex-col gap-2">
+          <div className="mt-4">
+            <label className="mb-1 block text-xs text-muted-foreground">
+              MONTO A MOVER
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-2.5 text-xs text-muted-foreground">
+                $
+              </span>
+              <input
+                type="number"
+                step="0.01"
+                value={monto}
+                onChange={(e) => setMonto(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background py-2 pl-7 pr-3 text-sm outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-2">
             {OPCIONES.map((op) => (
               <button
                 key={op.value}
@@ -116,18 +163,24 @@ export default function CierreMesModal({
           )}
 
           <div className="mt-5 flex gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                startTransition(async () => {
-                  await registrarCierreMes(mesDB, "nada", sobrante);
-                  onClose();
-                });
-              }}
-              className="flex-1 rounded-lg border border-border px-4 py-2.5 text-sm hover:bg-muted"
-            >
-              Ahora no
-            </button>
+            {accionExistente ? (
+              <button
+                type="button"
+                onClick={handleDeshacer}
+                disabled={isPending}
+                className="rounded-lg border border-destructive/30 px-3 py-2.5 text-xs font-medium text-destructive hover:bg-destructive/10 disabled:opacity-40"
+              >
+                Deshacer cierre
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-sm hover:bg-muted"
+              >
+                Cancelar
+              </button>
+            )}
             <button
               type="button"
               onClick={handleConfirmar}
@@ -137,10 +190,6 @@ export default function CierreMesModal({
               {isPending ? "Guardando..." : "Confirmar"}
             </button>
           </div>
-
-          <p className="mt-3 text-center text-[10px] text-muted-foreground">
-            Podés ver el historial de cierres en Reportes
-          </p>
         </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ export default function MasPage() {
   const [mounted, setMounted] = useState(false);
 
   // Evita hydration mismatch — el theme real solo se conoce en cliente
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
   return (
@@ -88,7 +89,7 @@ export default function MasPage() {
           </a>
         </div>
         <p className="mt-6 text-center text-[11px] text-muted-foreground">
-          Colchoncito · v2.1 · hecho en Argentina 🇦🇷
+          Colchoncito · v2.2 · hecho en Argentina 🇦🇷
         </p>
       </div>
     </>

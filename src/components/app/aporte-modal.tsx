@@ -1,7 +1,9 @@
-"use client";
-
 import { useState, useTransition, type FormEvent } from "react";
-import { crearAporte, editarAporte } from "@/app/(app)/presupuesto/actions";
+import {
+  crearAporte,
+  editarAporte,
+  borrarAporte,
+} from "@/app/(app)/presupuesto/actions";
 import type { PresupuestoAporte, Moneda, Categoria } from "@/lib/types";
 
 type Props = {
@@ -30,7 +32,16 @@ export default function AporteModal({
   );
   const [notas, setNotas] = useState(aporte?.notas ?? "");
   const [error, setError] = useState<string | null>(null);
+  const [confirmandoBorrar, setConfirmandoBorrar] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const handleBorrar = () => {
+    startTransition(async () => {
+      const result = await borrarAporte(aporte!.id);
+      if (result.error) setError(result.error);
+      else onClose();
+    });
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -199,22 +210,57 @@ export default function AporteModal({
               </div>
             )}
 
-            <div className="mt-2 flex gap-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-sm hover:bg-muted"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={isPending}
-                className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
-              >
-                {isPending ? "Guardando..." : editando ? "Guardar" : "Crear"}
-              </button>
-            </div>
+            {confirmandoBorrar ? (
+              <div className="rounded-lg bg-destructive/10 p-3">
+                <p className="mb-2 text-xs font-medium text-destructive">
+                  ¿Seguro que querés borrar este aporte?
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmandoBorrar(false)}
+                    className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-xs hover:bg-muted"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleBorrar}
+                    disabled={isPending}
+                    className="flex-1 rounded-md bg-destructive px-3 py-1.5 text-xs font-medium text-destructive-foreground hover:opacity-90 disabled:opacity-50"
+                  >
+                    {isPending ? "Borrando..." : "Sí, borrar"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-2 flex gap-2">
+                {editando && (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmandoBorrar(true)}
+                    disabled={isPending}
+                    className="rounded-lg border border-destructive/30 px-3 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 disabled:opacity-50"
+                  >
+                    Borrar
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 rounded-lg border border-border px-4 py-2.5 text-sm hover:bg-muted"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                >
+                  {isPending ? "Guardando..." : editando ? "Guardar" : "Crear"}
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>

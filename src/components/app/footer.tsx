@@ -22,6 +22,16 @@ export default function Footer() {
           >
             Portfolio
           </a>
+          <span className="text-border">·</span>
+
+          <a
+            href="https://cafecito.app/maggioniduffy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground"
+          >
+            ☕ Invitame un cafecito
+          </a>
         </div>
       </div>
     </footer>
